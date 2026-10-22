@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --color-ink-950: #0a1626;
+  --color-ink-900: #10233c;
+  --color-ink-700: #1d3a5f;
+  --color-ink-500: #4a6a92;
+  --color-ink-300: #8fa3bf;
+
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dce8ff;
+  --color-brand-200: #bcd3ff;
+  --color-brand-300: #8fb4ff;
+  --color-brand-400: #5b8bf7;
+  --color-brand-500: #3365e8;
+  --color-brand-600: #1f4bc9;
+  --color-brand-700: #1b3ba3;
+  --color-brand-800: #1a3382;
+  --color-brand-900: #172d6b;
+
+  --color-teal-450: #14b8a6;
+  --color-sand-50: #faf8f4;
+  --color-sand-100: #f4f1ea;
+  --color-sand-200: #e8e3d8;
+
+  --animate-rise: rise 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-in: slide-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-pop: pop 0.22s ease-out both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: #f6f7fb;
+  color: #10233c;
+  -webkit-font-smoothing: antialiased;
+  /* Yatay taşmayı (geniş tablolar/kanban) gövde seviyesinde engelle */
+  overflow-x: hidden;
+  /* iOS'ta adres çubuğu çekilmesini engellemeden, içerik kaymasını önle */
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Dokunmatik cihazlarda 300ms gecikmeyi ve çift dokunuş yakınlaştırmasını kaldır */
+button,
+a,
+summary,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS Safari: 16px altı girişlerde otomatik yakınlaştırmayı engellemek için
+   bileşenlerde text-base kullanılıyor; burada da yedek kural tanımlı. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Güvenli alan yardımcıları (iPhone Pro Max alt/üst, çentik) */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+@utility pl-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+@utility pr-safe {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+@utility bottom-safe {
+  bottom: env(safe-area-inset-bottom, 0px);
+}
+@utility h-safe-bottom {
+  height: env(safe-area-inset-bottom, 0px);
+}
+
+/* Yatay kaydırmalı alanlarda zincirleme kaydırmayı kes (iOS/Android) */
+.scroll-x,
+.scroll-y {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-x {
+  scroll-snap-type: x proximity;
+}
+.scroll-x > * {
+  scroll-snap-align: start;
+}
+
+/* Arka plan kaydırmasını kilitlemek için (detay paneli açıkken) */
+body.scroll-locked {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: var(--scroll-lock-offset, 0px);
+}
+
+@media (hover: none) {
+  /* Dokunmatik cihazlarda hover kalıntısı durum bırakma */
+  .hover\:bg-slate-50:hover {
+    background-color: transparent;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9d2e3;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #3365e8;
+  outline-offset: 2px;
+}
+
+.grid-paper {
+  background-image:
+    linear-gradient(to right, rgba(16, 35, 60, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 35, 60, 0.045) 1px, transparent 1px);
+  background-size: 26px 26px;
+}

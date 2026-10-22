@@ -1,0 +1,117 @@
+import {
+  boolean,
+  integer,
+  jsonb,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
+
+/** Tek satırlık aday profili (id = 1). */
+export const candidateProfiles = pgTable("candidate_profiles", {
+  id: integer("id").primaryKey().default(1),
+  fullName: text("full_name"),
+  birthDate: text("birth_date"),
+  gender: text("gender"),
+  homeCity: text("home_city"),
+  educationLevel: text("education_level"),
+  departments: jsonb("departments").$type<string[]>().default([]),
+  fieldOfStudy: text("field_of_study"),
+  kpssScore: integer("kpss_score"),
+  kpssType: text("kpss_type"),
+  kpssYear: integer("kpss_year"),
+  kpssScoreSecondary: integer("kpss_score_secondary"),
+  kpssTypeSecondary: text("kpss_type_secondary"),
+  driverLicense: text("driver_license"),
+  militaryStatus: text("military_status"),
+  disability: boolean("disability").default(false),
+  experienceYears: integer("experience_years").default(0),
+  certificates: jsonb("certificates").$type<string[]>().default([]),
+  languages: jsonb("languages").$type<string[]>().default([]),
+  maritalStatus: text("marital_status"),
+  phone: text("phone"),
+  email: text("email"),
+  notes: text("notes"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+/** Tek satırlık iş arama kriterleri (id = 1). */
+export const jobPreferences = pgTable("job_preferences", {
+  id: integer("id").primaryKey().default(1),
+  cities: jsonb("cities").$type<string[]>().default([]),
+  cityMode: text("city_mode").default("prefer"),
+  ilanTypes: jsonb("ilan_types").$type<string[]>().default([]),
+  institutionTypes: jsonb("institution_types").$type<string[]>().default([]),
+  titleKeywords: jsonb("title_keywords").$type<string[]>().default([]),
+  excludeKeywords: jsonb("exclude_keywords").$type<string[]>().default([]),
+  acceptedKpssTypes: jsonb("accepted_kpss_types").$type<string[]>().default([]),
+  minPositions: integer("min_positions").default(0),
+  maxDeadlineDays: integer("max_deadline_days"),
+  minMatchScore: integer("min_match_score").default(0),
+  hideUnknownRequirements: boolean("hide_unknown_requirements").default(false),
+  includeDemoData: boolean("include_demo_data").default(true),
+  sortBy: text("sort_by").default("score"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+/** İlan önbelleği — kaynaklardan normalize edilmiş kayıtlar. */
+export const jobs = pgTable("jobs", {
+  sourceKey: text("source_key").primaryKey(),
+  source: text("source").notNull().default("sbb"),
+  title: text("title").notNull(),
+  institution: text("institution"),
+  unit: text("unit"),
+  ilanNo: text("ilan_no"),
+  category: text("category"),
+  ilanType: text("ilan_type"),
+  institutionType: text("institution_type"),
+  publishedAt: timestamp("published_at"),
+  applicationStart: timestamp("application_start"),
+  applicationEnd: timestamp("application_end"),
+  kadroCount: integer("kadro_count"),
+  cities: jsonb("cities").$type<string[]>().default([]),
+  positions: jsonb("positions").$type<unknown[]>().default([]),
+  rawText: text("raw_text"),
+  parsed: jsonb("parsed").$type<Record<string, unknown>>().default({}),
+  detailUrl: text("detail_url"),
+  applyUrl: text("apply_url"),
+  logoUrl: text("logo_url"),
+  isDemo: boolean("is_demo").default(false),
+  detailFetchedAt: timestamp("detail_fetched_at"),
+  fetchedAt: timestamp("fetched_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+/** Başvuru takibi (pipeline). */
+export const applications = pgTable("applications", {
+  id: serial("id").primaryKey(),
+  jobKey: text("job_key").notNull().unique(),
+  jobTitle: text("job_title"),
+  institution: text("institution"),
+  status: text("status").notNull().default("saved"),
+  score: integer("score").default(0),
+  note: text("note"),
+  documents: jsonb("documents").$type<unknown[]>().default([]),
+  deadline: timestamp("deadline"),
+  reminderDate: timestamp("reminder_date"),
+  savedAt: timestamp("saved_at").defaultNow(),
+  appliedAt: timestamp("applied_at"),
+  examDate: timestamp("exam_date"),
+  resultNote: text("result_note"),
+  lastOpenedAt: timestamp("last_opened_at"),
+});
+
+/** Kaynak senkronizasyon günlüğü. */
+export const syncLogs = pgTable("sync_logs", {
+  id: serial("id").primaryKey(),
+  source: text("source").notNull(),
+  status: text("status").notNull(),
+  message: text("message"),
+  found: integer("found").default(0),
+  inserted: integer("inserted").default(0),
+  updated: integer("updated").default(0),
+  durationMs: integer("duration_ms").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
