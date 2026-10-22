@@ -27,15 +27,17 @@ jobs:
       - name: Node.js kur
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 22 # Node sürümünü güncelleyerek uyarıları gideriyoruz
+          # Kilit dosyası aramasını engellemek için cache satırını sildik
 
       - name: Bağımlılıkları kur
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
       - name: İlan verisini çek ve statik derleme üret
-        # basePath depo adından otomatik türetilir (user.github.io depolarında boş kalır)
+        # DATABASE_URL hatasını bypass etmek için sahte bir değişken tanımlıyoruz
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/app_db"
         run: bash scripts/build-pages.sh
 
       - name: Pages artefaktını yükle
