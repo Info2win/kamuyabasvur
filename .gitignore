@@ -1,0 +1,25 @@
+# Bağımlılıklar ve derleme çıktıları
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts.bak
+
+# Statik derleme sırasında API uçlarının geçici yedeği
+.pages-api-backup/
+
+# Ortam değişkenleri (gizli bilgiler)
+.env
+.env*.local
+
+# İşletim sistemi / editör
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Günlükler
+npm-debug.log*
+yarn-error.log*
+*.log

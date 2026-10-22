@@ -23,8 +23,7 @@ export default function IlanlarPage() {
           </p>
           <h1 className="mt-1.5 text-[21px] font-bold tracking-tight sm:text-[26px] text-ink-900">Sana uygun kamu ilanları</h1>
           <p className="mt-1 text-[13.5px] text-slate-500">
-            Toplam {stats?.total ?? 0} ilan tarandı · <b className="text-brand-700">{stats?.visible ?? 0}</b> tanesi kriterlerinden geçti ·{" "}
-            {stats?.liveCount ?? 0} canlı, {stats?.demoCount ?? 0} örnek kayıt
+            {stats?.total ?? 0} ilan tarandı · <b className="text-brand-700">{stats?.visible ?? 0}</b> tanesi sana uygun
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

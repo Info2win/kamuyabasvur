@@ -2,8 +2,8 @@
 
 import { Bookmark, BookmarkCheck, Building2, CalendarClock, Check, ChevronRight, ExternalLink, MapPin, Users } from "lucide-react";
 import type { MatchedJob } from "@/lib/match";
-import type { ApplicationRecord } from "@/lib/store";
-import { ILAN_TYPES } from "@/lib/types";
+import { ILAN_TYPES} from "@/lib/types";
+import type { ApplicationRecord, DashboardPayload } from "@/lib/types";
 import { deadlineLabel, formatDate, STATUS_LABEL, STATUS_STYLE, URGENCY_STYLE } from "@/lib/format";
 import { Badge, ScoreRing } from "./ui";
 
@@ -46,7 +46,7 @@ export function JobCard({
               <Building2 className="h-3.5 w-3.5" />
               {job.institution ?? "Kurum belirtilmemiş"}
             </span>
-            {job.isDemo ? <Badge tone="amber">Örnek veri</Badge> : <Badge tone="emerald">Canlı kaynak</Badge>}
+            {job.isDemo ? <Badge tone="amber">Örnek ilan</Badge> : null}
             {job.ilanType ? <Badge>{ilanTypeLabel(job.ilanType)}</Badge> : null}
             {done ? <Badge tone="emerald"><Check className="h-3 w-3" /> Başvuruldu</Badge> : saved ? <Badge tone="brand"><BookmarkCheck className="h-3 w-3" /> Takipte</Badge> : null}
           </div>

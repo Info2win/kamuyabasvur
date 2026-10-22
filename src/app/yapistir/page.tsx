@@ -49,22 +49,22 @@ function YapistirInner() {
     <div className="space-y-6">
       <header>
         <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-          <ClipboardPaste className="h-4 w-4" /> İlan içe aktarma merkezi
+          <ClipboardPaste className="h-4 w-4" /> İlan ekle
         </p>
         <h1 className="mt-1.5 text-[21px] font-bold tracking-tight sm:text-[26px] text-ink-900">
-          {mode === "liste" ? "Tüm ilan listesini tek seferde aktar" : "Tek bir ilanın metnini çözümle"}
+          {mode === "liste" ? "Tüm ilan listesini tek seferde ekle" : "Tek bir ilanın şartlarını otomatik çıkar"}
         </h1>
         <p className="mt-1 max-w-3xl text-[13.5px] leading-relaxed text-slate-500">
           {mode === "liste"
-            ? "kamuilan.sbb.gov.tr adresindeki ilan listesinin tamamını (ör. 101 ilan) buraya yapıştır; hepsi saniyeler içinde havuza eklenir ve profilinle puanlanır."
+            ? "kamuilan.sbb.gov.tr adresindeki ilan listesinin tamamını (ör. 101 ilan) buraya yapıştır; hepsi saniyeler içinde listene eklenir ve profilinle puanlanır."
             : "Tek bir ilanın metnini yapıştır; KPSS, yaş, bölüm, kadro, şehir ve son başvuru bilgileri otomatik çıkarılsın."}
         </p>
       </header>
 
       <div className="flex flex-wrap gap-2">
         {([
-          { key: "liste", label: "Toplu liste içe aktar", icon: ListTree },
-          { key: "tek", label: "Tek ilan çözümle", icon: ScanText },
+          { key: "liste", label: "Tüm listeyi ekle", icon: ListTree },
+          { key: "tek", label: "Tek ilan ekle", icon: ScanText },
         ] as const).map((t) => {
           const Icon = t.icon;
           return (
@@ -116,7 +116,7 @@ function BulkImport() {
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
       <Card className="p-4 sm:p-5">
-        <SectionTitle title="Liste içeriği" subtitle="HTML kaynağı veya kopyalanan liste metni" />
+        <SectionTitle title="Liste içeriği" subtitle="Resmî ilan listesinden kopyaladığın içeriği yapıştır" />
         <div className="space-y-3.5">
           <Field label="Kaynak adresi" hint="hangi portaldan kopyaladın?">
             <Input value={sourceUrl} onChange={(e) => setSourceUrl(e.target.value)} placeholder="https://kamuilan.sbb.gov.tr/" />
@@ -126,13 +126,13 @@ function BulkImport() {
               rows={18}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder={"Liste sayfasının tamamını buraya yapıştır…\n\nYöntem 1 (önerilen): kamuilan.sbb.gov.tr aç → Ctrl+U (kaynağı görüntüle) → Ctrl+A → Ctrl+C → buraya yapıştır.\nYöntem 2: sayfada Ctrl+A ile tümünü seç, kopyala ve buraya yapıştır (görsel metin de çalışır)."}
-              className="font-mono text-base sm:text-[11.5px]"
+              placeholder={"Resmî ilan listesini buraya yapıştır…\n\n1. kamuilan.sbb.gov.tr adresini aç\n2. Ctrl+A ile tümünü seç, Ctrl+C ile kopyala\n3. Buraya yapıştır ve 'Tümünü içe aktar' de"}
+              className="text-base sm:text-[12.5px]"
             />
           </Field>
           <div className="flex flex-wrap gap-2">
             <Button icon={<FileStack className="h-4 w-4" />} disabled={busy || syncing || content.trim().length < 40} onClick={() => void run()}>
-              {busy || syncing ? "İçe aktarılıyor…" : "Tümünü içe aktar"}
+              {busy || syncing ? "Ekleniyor…" : "Tümünü ekle"}
             </Button>
             <Button
               variant="ghost"
@@ -152,9 +152,8 @@ function BulkImport() {
           <div className="flex items-start gap-2 rounded-xl bg-brand-50 px-3.5 py-3 text-[12px] leading-relaxed text-brand-800">
             <Info className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
-              kamuilan.sbb.gov.tr bazı sunucu IP&apos;lerini engelliyor. Bu yüzden liste doğrudan çekilemediğinde en pratik yol budur: sayfayı kendi
-              tarayıcında açıp kopyala, buraya yapıştır — <b>101 ilan varsa 101&apos;i de</b> havuza eklenir. Aynı ilanlar tekrar yapıştırılırsa güncellenir,
-              çoğalmaz.
+              Listeyi kendi tarayıcından kopyaladığın için eksiksiz gelir: <b>101 ilan varsa 101&apos;i de</b> eklenir. Kurum adı, kadro sayısı, son başvuru
+              tarihi ve şehirler otomatik ayrıştırılır. Aynı listeyi tekrar yapıştırırsan ilanlar güncellenir, çoğalmaz.
             </span>
           </div>
         </div>
@@ -187,8 +186,8 @@ function BulkImport() {
               </ul>
             ) : null}
             <p className="mt-3 text-[12px] text-slate-500">
-              İçe aktarılan ilanların detay metni yoksa, ilan kartındaki <b>Metni yapıştır</b> veya <b>Resmî detayı çek</b> ile şartları
-              netleştirebilirsin.
+              Bir ilanın tüm şartlarını görmek için ilan kartını aç, <b>Metni yapıştır</b> ile ilanın metnini kopyala: KPSS, yaş, bölüm, kadro ve son
+              başvuru bilgileri otomatik dolar.
             </p>
           </Card>
         ) : (
@@ -197,10 +196,10 @@ function BulkImport() {
               <span className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600">
                 <ListTree className="h-6 w-6" />
               </span>
-              <h3 className="text-[15px] font-semibold text-ink-900">Henüz içe aktarma yapılmadı</h3>
+              <h3 className="text-[15px] font-semibold text-ink-900">Henüz ilan eklemedin</h3>
               <p className="mx-auto mt-1.5 max-w-sm text-[13px] leading-relaxed text-slate-500">
-                Soldaki alana liste içeriğini yapıştırıp &quot;Tümünü içe aktar&quot; dediğinde; başlıklar, kurumlar, kadro sayıları ve son başvuru tarihleri
-                ayrıştırılıp profilinle eşleştirilir.
+                Resmî ilan listesini soldaki alana yapıştırıp &quot;Tümünü ekle&quot; dediğinde; kurumlar, kadro sayıları ve son başvuru tarihleri
+                otomatik bulunur ve profilinle eşleştirilir.
               </p>
             </div>
           </Card>
@@ -211,9 +210,9 @@ function BulkImport() {
           <ol className="space-y-2.5">
             {[
               "Tarayıcında kamuilan.sbb.gov.tr adresini aç (giriş gerekmez).",
-              "Ctrl+U ile sayfa kaynağını aç, Ctrl+A ile tümünü seç ve kopyala. Alternatif olarak liste sayfasında Ctrl+A + Ctrl+C de yeterli.",
-              "Buraya yapıştır, 'Tümünü içe aktar' de.",
-              "İlanlar havuza eklenir; uyum skoruna göre /ilanlar ve /hizli modda sıralanır.",
+              "Ctrl+A ile tümünü seç, Ctrl+C ile kopyala.",
+              "Buraya yapıştır ve 'Tümünü içe aktar' de.",
+              "İlanlar listene eklenir; sana uygunluk skoruna göre sıralanır.",
             ].map((step, i) => (
               <li key={i} className="flex items-start gap-3">
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-600 text-[11px] font-bold text-white">{i + 1}</span>
@@ -223,7 +222,7 @@ function BulkImport() {
           </ol>
           {data?.jobs.some((j) => j.source === "import" || j.source === "sbb") ? (
             <div className="mt-4 border-t border-slate-100 pt-3">
-              <p className="mb-2 text-[12px] font-semibold text-slate-500">İçe aktarılan son ilanlar</p>
+              <p className="mb-2 text-[12px] font-semibold text-slate-500">Son eklediğin ilanlar</p>
               <div className="flex flex-wrap gap-1.5">
                 {data.jobs
                   .filter((j) => j.source === "import" || j.source === "sbb")
@@ -298,7 +297,7 @@ function SingleAnalyze() {
           </Field>
           <div className="flex flex-wrap gap-2">
             <Button icon={<ScanText className="h-4 w-4" />} disabled={busy} onClick={() => void run()}>
-              {busy ? "Çözümleniyor…" : "Çözümle ve listeye ekle"}
+              {busy ? "İnceleniyor…" : "İlanı ekle ve puanla"}
             </Button>
             <Button
               variant="ghost"
@@ -434,10 +433,10 @@ function SingleAnalyze() {
               <span className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600">
                 <ClipboardPaste className="h-6 w-6" />
               </span>
-              <h3 className="text-[15px] font-semibold text-ink-900">Henüz bir ilan çözümlenmedi</h3>
+              <h3 className="text-[15px] font-semibold text-ink-900">Henüz bir ilan eklemedin</h3>
               <p className="mx-auto mt-1.5 max-w-sm text-[13px] leading-relaxed text-slate-500">
-                İlan metnini yapıştırıp &quot;Çözümle&quot; dediğinde KPSS, yaş, bölüm, şehir ve son başvuru bilgileri otomatik çıkarılır ve profilinle
-                karşılaştırılır.
+                İlan metnini yapıştırıp &quot;İlanı ekle ve puanla&quot; dediğinde KPSS, yaş, bölüm, şehir ve son başvuru bilgileri otomatik bulunur ve
+                profilinle karşılaştırılır.
               </p>
             </div>
           </Card>

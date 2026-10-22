@@ -239,7 +239,7 @@ export default function TercihlerPage() {
             checked={form.includeDemoData}
             onChange={(v) => set("includeDemoData", v)}
             label="Örnek ilanları göster"
-            description="Canlı kaynaklara erişilemediğinde yüklenen örnek kayıtlar (rozetle işaretli)."
+            description="Gerçek ilanlar yüklenene kadar uygulamayı denemeni sağlayan, 'Örnek ilan' rozetli kayıtlar."
           />
         </div>
       </Card>

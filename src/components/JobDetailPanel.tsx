@@ -23,9 +23,8 @@ import {
   X,
 } from "lucide-react";
 import type { MatchedJob } from "@/lib/match";
-import type { ApplicationRecord } from "@/lib/store";
 import { APPLICATION_STATUS_LABELS, EDUCATION_LABELS } from "@/lib/types";
-import type { ApplicationStatus, DocumentItem, JobRecord } from "@/lib/types";
+import type { ApplicationStatus, DocumentItem, JobRecord, ApplicationRecord, DashboardPayload } from "@/lib/types";
 import { deadlineLabel, formatDate, formatDateTime, relativeTime, STATUS_LABEL, STATUS_STYLE } from "@/lib/format";
 import { useEscapeKey, useScrollLock } from "@/lib/useScrollLock";
 import { useAppState } from "./AppState";
@@ -95,7 +94,7 @@ export function JobDetailPanel({
   onClose: () => void;
 }) {
   const { job, match } = matched;
-  const { setApplication, updateJobText, enrichJobDetail, syncing, pushToast } = useAppState();
+  const { setApplication, updateJobText, pushToast } = useAppState();
   const [note, setNote] = useState(application?.note ?? "");
   const [reminder, setReminder] = useState(application?.reminderDate ? application.reminderDate.slice(0, 10) : "");
   const [examDate, setExamDate] = useState(application?.examDate ? application.examDate.slice(0, 10) : "");
@@ -162,13 +161,13 @@ export function JobDetailPanel({
                 <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-inset ${STATUS_STYLE[match.status]}`}>
                   {STATUS_LABEL[match.status]} · %{match.score}
                 </span>
-                {job.isDemo ? <Badge tone="amber">Örnek veri</Badge> : <Badge tone="emerald">Canlı kaynak</Badge>}
+                {job.isDemo ? <Badge tone="amber">Örnek ilan</Badge> : null}
                 {job.category ? <Badge>{job.category}</Badge> : null}
               </div>
               <h2 className="text-[15.5px] font-bold leading-snug text-ink-900 sm:text-[17px]">{job.title}</h2>
               <p className="mt-1 text-[13px] font-medium text-brand-700">{job.institution ?? "Kurum belirtilmemiş"}</p>
               <p className="mt-0.5 text-[11.5px] text-slate-400">
-                {job.ilanNo ? `İlan no: ${job.ilanNo} · ` : ""}Yayım: {formatDate(job.publishedAt)} · Son güncelleme: {relativeTime(job.fetchedAt)}
+                {job.ilanNo ? `İlan no: ${job.ilanNo} · ` : ""}Yayım tarihi: {formatDate(job.publishedAt)}
               </p>
             </div>
             <button type="button" onClick={onClose} className="focus-ring grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-100" aria-label="Paneli kapat">
@@ -194,9 +193,6 @@ export function JobDetailPanel({
             <Button variant={application ? "primary" : "dark"} className="col-span-2 sm:col-span-1 sm:flex-none" icon={<Check className="h-4 w-4" />} onClick={() => void changeStatus("applied")}>
               Başvurdum
             </Button>
-            <Button variant="outline" className="sm:flex-none" icon={<Sparkles className="h-4 w-4" />} disabled={syncing} onClick={() => void enrichJobDetail(job.sourceKey)}>
-              Resmî detayı çek
-            </Button>
             <Button variant="ghost" className="sm:flex-none" icon={<PencilLine className="h-4 w-4" />} onClick={() => setPasteOpen((v) => !v)}>
               Metni yapıştır
             </Button>
@@ -208,7 +204,7 @@ export function JobDetailPanel({
             <Card className="p-4">
               <Field
                 label="İlan metnini buraya yapıştır"
-                hint="kamuilan.sbb.gov.tr veya Kariyer Kapısı ilan metninin tamamı"
+                hint="resmî ilan sayfasındaki metnin tamamı"
               >
                 <Textarea
                   rows={8}
@@ -263,14 +259,14 @@ export function JobDetailPanel({
               />
               <Fact
                 icon={<ListChecks className="h-3.5 w-3.5" />}
-                label="Veri güveni"
-                value={`%${parsed.confidence ?? 0} · ${parsed.parsedFrom === "detay" ? "tam metin" : parsed.parsedFrom === "yapistirilan" ? "yapıştırılan metin" : "sadece başlık"}`}
-                tone={(parsed.confidence ?? 0) < 40 ? "warn" : "good"}
+                label="İlan metni"
+                value={parsed.parsedFrom === "baslik" ? "Sadece başlık var" : "Tam metin okundu"}
+                tone={parsed.parsedFrom === "baslik" ? "warn" : "good"}
               />
             </div>
             {(parsed.confidence ?? 0) < 40 ? (
               <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-[12px] leading-relaxed text-amber-800">
-                Bu ilanın yalnızca başlığı okunabildi. <b>Metni yapıştır</b> veya <b>Resmî detayı çek</b> ile tüm şartları (KPSS, yaş, bölüm, şehir kontenjanı) otomatik çıkarabilirsin.
+                Bu ilanda yalnızca başlık bilgisi var. <b>Metni yapıştır</b> ile ilanın tamamını kopyalarsan KPSS, yaş, bölüm, şehir ve son başvuru bilgileri otomatik doldurulur.
               </p>
             ) : null}
           </section>
@@ -393,13 +389,13 @@ export function JobDetailPanel({
             <details className="group rounded-2xl border border-slate-200 bg-white">
               <summary className="focus-ring flex cursor-pointer items-center justify-between px-4 py-3 text-[13px] font-bold text-slate-600">
                 <span className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" /> Ham ilan metni
+                  <FileText className="h-4 w-4" /> İlan metni
                 </span>
                 <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
               </summary>
               <div className="max-h-72 overflow-y-auto border-t border-slate-100 px-4 py-3">
                 <pre className="whitespace-pre-wrap font-sans text-[12.5px] leading-relaxed text-slate-600">
-                  {job.rawText ?? "İlan metni henüz çekilmedi. 'Resmî detayı çek' veya 'Metni yapıştır' ile ekleyebilirsin."}
+                  {job.rawText ?? "İlan metni henüz eklenmedi. 'Metni yapıştır' ile ilanın tamamını kopyalayabilirsin."}
                 </pre>
               </div>
             </details>

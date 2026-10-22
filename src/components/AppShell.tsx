@@ -73,9 +73,9 @@ function Sidebar() {
         <div className="mb-3 flex items-center justify-between gap-2">
           <span className="flex items-center gap-1.5">
             <span className={`h-2 w-2 rounded-full ${stats && stats.liveCount > 0 ? "bg-emerald-400" : "bg-amber-400"}`} />
-            {stats ? `${stats.liveCount} canlı · ${stats.demoCount} örnek` : "yükleniyor"}
+            {stats ? `${stats.total} ilan${stats.demoCount ? ` · ${stats.demoCount} örnek` : ""}` : "yükleniyor"}
           </span>
-          <span className="tabular-nums">{stats ? `${stats.total} toplam` : ""}</span>
+
         </div>
         <button
           type="button"
@@ -87,7 +87,7 @@ function Sidebar() {
           {syncing ? "Taranıyor…" : "İlanları güncelle"}
         </button>
         <p className="mt-3 leading-relaxed">
-          Kaynak: <span className="text-slate-300">kamuilan.sbb.gov.tr</span> + Kariyer Kapısı
+          İlanlar: <span className="text-slate-300">kamuilan.sbb.gov.tr</span>
         </p>
       </div>
     </aside>

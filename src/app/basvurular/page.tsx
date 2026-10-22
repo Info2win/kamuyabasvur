@@ -21,9 +21,8 @@ import { Badge, Button, Card, EmptyState, Input, Textarea } from "@/components/u
 import { deadlineLabel, formatDate, scoreColor } from "@/lib/format";
 import { matchJob } from "@/lib/match";
 import type { MatchedJob } from "@/lib/match";
-import type { ApplicationRecord } from "@/lib/store";
 import { APPLICATION_STATUS_LABELS, APPLICATION_STATUS_ORDER } from "@/lib/types";
-import type { ApplicationStatus } from "@/lib/types";
+import type { ApplicationStatus, ApplicationRecord, DashboardPayload } from "@/lib/types";
 
 export default function BasvurularPage() {
   const { data, setApplication, pushToast } = useAppState();
@@ -190,7 +189,7 @@ export default function BasvurularPage() {
                           </button>
                         </div>
                         {app.appliedAt ? <p className="text-[11px] text-slate-400">Başvuru: {formatDate(app.appliedAt)}</p> : null}
-                        {job?.isDemo ? <Badge tone="amber">Örnek veri</Badge> : null}
+                        {job?.isDemo ? <Badge tone="amber">Örnek ilan</Badge> : null}
                       </div>
                     </Card>
                   );

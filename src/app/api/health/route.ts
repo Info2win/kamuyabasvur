@@ -1,13 +1,12 @@
-import { db } from "@/db";
-import { sql } from "drizzle-orm";
-
-export const dynamic = "force-dynamic";
-
+/**
+ * Sağlık kontrolü — veritabanı gerektirmez.
+ * Uygulama tüm veriyi tarayıcıda (localStorage) tutar; bu uç yalnızca
+ * dağıtım platformlarının canlılık kontrolü için vardır.
+ */
 export async function GET() {
-  try {
-    await db.execute(sql`select 1`);
-    return Response.json({ ok: true });
-  } catch {
-    return Response.json({ ok: false }, { status: 500 });
-  }
+  return Response.json({
+    ok: true,
+    mode: "client-storage",
+    time: new Date().toISOString(),
+  });
 }

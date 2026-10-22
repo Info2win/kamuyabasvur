@@ -143,7 +143,7 @@ export default function HizliModPage() {
                 <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-inset ${STATUS_STYLE[match.status]}`}>
                   {STATUS_LABEL[match.status]}
                 </span>
-                {job.isDemo ? <Badge tone="amber">Örnek veri</Badge> : <Badge tone="emerald">Canlı</Badge>}
+                {job.isDemo ? <Badge tone="amber">Örnek ilan</Badge> : null}
                 {job.kadroCount ? <Badge tone="brand">{job.kadroCount} kadro</Badge> : null}
               </div>
               <p className="text-[13px] font-semibold text-brand-700">{job.institution ?? "Kurum belirtilmemiş"}</p>
@@ -255,7 +255,7 @@ export default function HizliModPage() {
               </div>
             </div>
             <p className="mt-3 text-[12px] leading-relaxed text-slate-500">
-              Kuyrukta <b className="text-ink-900">{queue.length}</b> ilan kaldı. Kararlar anında veritabanına yazılır, sekmeyi kapatsan da kaybolmaz.
+              Kuyrukta <b className="text-ink-900">{queue.length}</b> ilan kaldı. Kararlar anında bu tarayıcıya kaydedilir, sekmeyi kapatsan da kaybolmaz.
             </p>
           </Card>
 

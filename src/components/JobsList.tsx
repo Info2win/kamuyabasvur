@@ -109,9 +109,8 @@ export function JobsList({
               ))}
             </Select>
             <Select value={source} onChange={(e) => setSource(e.target.value as typeof source)} className="sm:w-auto sm:min-w-[9rem]">
-              <option value="all">Tüm kaynaklar</option>
-              <option value="live">Sadece canlı</option>
-              <option value="demo">Sadece örnek</option>
+              <option value="all">Tüm ilanlar</option>
+              <option value="live">Örnek ilanları gizle</option>
             </Select>
             <div className="col-span-2 flex gap-2 sm:col-span-1 sm:flex-none">
               <button

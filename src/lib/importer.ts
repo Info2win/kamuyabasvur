@@ -160,7 +160,10 @@ export function extractRows(content: string): ImportedRow[] {
     if (refined) rows.push(refined);
   }
 
-  if (rows.length >= 2) return rows;
+  // İçerik HTML ise (bağlantı/liste etiketleri var) düz metin yoluna geçme: aynı ilanlar
+  // iki kez eklenmesin.
+  const looksLikeHtml = /<a\s|<div|<tr|<span|<table/i.test(content);
+  if (rows.length >= 2 || (rows.length === 1 && looksLikeHtml)) return rows;
 
   // 2) Düz metin (kopyala-yapıştır liste)
   const lines = cleanHtml(content).split(/\n+/).map((l) => l.replace(/\s+/g, " ").trim());

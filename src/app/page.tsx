@@ -68,7 +68,7 @@ export default function DashboardPage() {
               <span className="text-brand-300">{stats?.strong ?? 0} ilan</span> sana uygun görünüyor.
             </h1>
             <p className="mt-3 text-[14px] leading-relaxed text-slate-300">
-              kamuilan.sbb.gov.tr ve Kariyer Kapısı ilanları profilinle karşılaştırıldı. {stats?.urgent ?? 0} ilanın başvurusu 7 gün içinde kapanıyor.
+              Resmî kamu ilanları profilinle karşılaştırıldı. {stats?.urgent ?? 0} ilanın başvurusu 7 gün içinde kapanıyor.
             </p>
 
             <div className="mt-5 flex flex-wrap gap-1.5">
@@ -204,51 +204,7 @@ export default function DashboardPage() {
             </Card>
           </section>
 
-          <section>
-            <SectionTitle title="Kaynak durumu" subtitle="Veriler nereden geliyor" />
-            <Card className="p-4">
-              <div className="space-y-2.5">
-                {logs.length ? (
-                  logs.slice(0, 4).map((log) => (
-                    <div key={log.id} className="flex items-start gap-2.5">
-                      <span
-                        className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
-                          log.status === "ok" ? "bg-emerald-500" : log.status === "blocked" ? "bg-amber-500" : log.status === "empty" ? "bg-slate-400" : "bg-rose-500"
-                        }`}
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="flex flex-wrap items-center gap-1.5">
-                          <span className="text-[12.5px] font-semibold text-ink-900">{log.source}</span>
-                          <Badge tone={log.status === "ok" ? "emerald" : log.status === "blocked" ? "amber" : "slate"}>
-                            {log.status === "ok" ? "erişildi" : log.status === "blocked" ? "engellendi" : log.status === "empty" ? "boş" : "hata"}
-                          </Badge>
-                          <span className="text-[11px] text-slate-400">{relativeTime(log.createdAt)}</span>
-                        </span>
-                        <span className="mt-0.5 block text-[11.5px] leading-relaxed text-slate-500">{log.message}</span>
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-[12.5px] text-slate-500">Henüz tarama kaydı yok.</p>
-                )}
-              </div>
 
-              <div className="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
-                <Button size="sm" icon={<RefreshCw className={`h-3.5 w-3.5 ${syncing ? "animate-spin" : ""}`} />} disabled={syncing} onClick={() => void sync(0)}>
-                  Yeniden tara
-                </Button>
-                <Button size="sm" variant="outline" icon={<Database className="h-3.5 w-3.5" />} disabled={syncing} onClick={() => void sync(6)}>
-                  İlk 6 ilanın detayını çek
-                </Button>
-              </div>
-
-              <p className="mt-3 flex items-start gap-2 text-[11.5px] leading-relaxed text-slate-500">
-                <GraduationCap className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400" />
-                kamuilan.sbb.gov.tr bazı sunucu IP'lerini engelliyor. Engellendiğinde ilanlar Kariyer Kapısı'nın resmî RSS beslemesinden alınır; detay metni için
-                &quot;Resmî detayı çek&quot; veya &quot;İlan yapıştır&quot; kullanabilirsin.
-              </p>
-            </Card>
-          </section>
         </div>
       </div>
     </div>

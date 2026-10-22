@@ -198,3 +198,46 @@ export const INSTITUTION_TYPES = [
 ];
 
 export const KPSS_TYPES = ["KPSSP3", "P3", "P93", "P94", "P98", "P99", "P1", "P2"];
+
+/** Takip edilen başvuru kaydı (tarayıcıda localStorage'da tutulur). */
+export type ApplicationRecord = {
+  id: number;
+  jobKey: string;
+  jobTitle: string | null;
+  institution: string | null;
+  status: ApplicationStatus;
+  score: number | null;
+  note: string | null;
+  documents: DocumentItem[];
+  deadline: string | null;
+  reminderDate: string | null;
+  savedAt: string | null;
+  appliedAt: string | null;
+  examDate: string | null;
+  resultNote: string | null;
+  lastOpenedAt: string | null;
+};
+
+/** Arayüzün ihtiyaç duyduğu tüm veri (tek istekte döner). */
+export type DashboardPayload = {
+  profile: Profile;
+  preferences: Preferences;
+  matched: { job: JobRecord; match: MatchResult; excluded: boolean; excludeReason?: string }[];
+  excluded: { job: JobRecord; match: MatchResult; excluded: boolean; excludeReason?: string }[];
+  applications: Record<string, ApplicationRecord>;
+  jobs: JobRecord[];
+  logs: SyncLogEntry[];
+  stats: {
+    total: number;
+    visible: number;
+    strong: number;
+    partial: number;
+    risky: number;
+    urgent: number;
+    applied: number;
+    saved: number;
+    demoCount: number;
+    liveCount: number;
+  };
+  syncedJustNow: boolean;
+};
